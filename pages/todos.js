@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Colours, Typography } from '../definitions';
-import TodoList from '../components/ToDoList';
 import PageLayout from '../components/PageLayout';
 import apiFetch from '../functions/apiFetch';
 
@@ -16,10 +15,20 @@ const Todos = () => {
         }).then(response => getTodoList(response.body));
     }
 
+    const handleClick = async (todoID) => {
+        await apiFetch("/todo/update", {
+            body: { todoID },
+            method: "POST"
+        });
+        //after update, recall fetch to get updated todoList
+        handleGET()
+    }
+
     //useEffect to call async function once 
     useEffect(() => {
         handleGET()
     }, [])
+
 
     //conditional render for TodoList object so that an undefined list isnt passed in
     return (
@@ -27,10 +36,18 @@ const Todos = () => {
             <Container>
                 <div className="content">
                     <h1>Todos</h1>
-                    <div className="listContainer">
-                        {todoList ? <TodoList list={todoList.todos} /> : <></>}
+                    <TodoListContainer>
+                        <ul>
+                            {todoList ?
+                                todoList.todos.map((todo) => (
+                                    <ListItem key={todo.todoID} onClick={() => handleClick(todo.todoID)} >
+                                        <li style={{ textDecorationLine: todo.completed && 'line-through' }}>{todo.name}</li>
+                                    </ListItem>
 
-                    </div>
+                                ))
+                                : <></>}
+                        </ul>
+                    </TodoListContainer>
                 </div>
             </Container>
         </PageLayout>
@@ -53,3 +70,21 @@ const Container = styled.div`
         }
     }
 `;
+
+const TodoListContainer = styled.div`
+    width: 400px;
+    margin: auto;
+`
+
+const ListItem = styled.div`
+    font-size: 24px;
+    padding: 10px;
+    selectable: false;
+
+    &:hover {
+        background-color:lightgray;
+        cursor:pointer;
+    }
+
+`;
+
