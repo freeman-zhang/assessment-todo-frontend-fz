@@ -52,10 +52,8 @@ const Todos = () => {
         <PageLayout title="Todos">
             <Container>
                 <div className="content">
-                    <TopContainer>
-                        <h1>Todos</h1>
-                        <Button className="filterButton" text={!filterStatus ? 'ALL' : filterStatus === 1 ? 'COMPLETED' : 'UNCOMPLETED'} size="large" variant="primary" onClick={nextFilter} />
-                    </TopContainer>
+                    <h1 style={{ marginBottom: '0' }}>Todos</h1>
+                    <FilterButton className="filterButton" text={!filterStatus ? 'ALL' : filterStatus === 1 ? 'COMPLETED' : 'UNCOMPLETED'} size="large" variant="primary" onClick={nextFilter} />
                     <TodoListContainer>
                         <ul>
                             {todoList ?
@@ -108,11 +106,8 @@ const ListItem = styled.div`
 
 `;
 
-const TopContainer = styled.div`
-    text-align: center;
-    &:last-child {
-        float: right;
-        position: relative;
-    }
+const FilterButton = styled(Button)`
+    margin: 10px auto 20px auto;
+    width: 170px;
 `
 
